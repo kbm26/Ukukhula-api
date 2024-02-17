@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\API\\API.csproj": {}
+    "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\API\\API.csproj": {
+    "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\API\\API.csproj",
+        "projectUniqueName": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\API\\API.csproj",
+        "projectPath": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj",
         "packagesPath": "C:\\Users\\bbdnet2897\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\API\\obj\\",
+        "outputPath": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\bbdnet2897\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,9 +40,21 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.JsonPatch": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
             }
           },
           "imports": [
