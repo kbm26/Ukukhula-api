@@ -2,7 +2,7 @@
 {
     public class UniversityFundApplication
     {
-        private int ApplicationID { get; }
+        public int ApplicationID { get; }
         public string UniversityID { get; set; }
         public DateTime FundingYear { get; set; }
         public int Amount { get; set; }
