@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API - Backup")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d2e6518d699197b26545b896b6b44f22455df200")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5f7caf7f9ddf2aa1f0e29185c5a8ea7c0c3c2c83")]
 [assembly: System.Reflection.AssemblyProductAttribute("API - Backup")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API - Backup")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
