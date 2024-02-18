@@ -2,16 +2,15 @@
 
 namespace API.Model
 {
-    public class BBDFund
+    public class BBDFund(decimal budget, DateTime fundingDate, int universityID)
     {
-        [Key]
-        private int FundID;
-        [Required]
-        public int Budget { get; set; }
-        [Required]
-        public DateTime Date { get; set; }
-        [Required]
-        private int UniversityID { get; set; }
 
+        public int FundID { get; set; }
+
+        public decimal Budget { get; set; } = budget;
+
+        public DateTime FundingDate { get; set; } = fundingDate;
+
+        public int UniversityID { get; set; } = universityID;
     }
 }
