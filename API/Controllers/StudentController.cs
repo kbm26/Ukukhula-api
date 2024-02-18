@@ -25,7 +25,20 @@ namespace API.Controllers
             connString.Open();
             try
             {
-                return Json(new UniversityRepository(connString).GetAll());
+                IEnumerable < University >  unis = new UniversityRepository(connString).GetAll();
+                IEnumerable<UniversityFundApplication> unifunds = new UniversityFundApplicationRepository(connString).GetAll();
+
+                var query = from University in unis
+                            join Unifund in unifunds on University.UniversityID equals Unifund.UniversityID
+                            where University.Name == "University of Cape Town"
+                            where Unifund.FundingYear.Date.Year == 2020
+                            select new
+                            {
+                                name = University.Name,
+                                budget = Unifund.Amount,
+                                year = Unifund.FundingYear.Date.Year
+                            };
+                return Json(query);
 
             }
             catch (Exception ef)
