@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Mvc;
 ﻿using API.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -23,12 +22,9 @@ namespace API.Controllers
         public JsonResult Get() //GET
         {            
             SqlConnection connString = new SqlConnection("Server=tcp:ukukhulabursaryfund.database.windows.net,1433;Initial Catalog=UkukhulaDatabase;Persist Security Info=False;User ID=Admin3;Password=Database1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            connString.Open();
             try
             {
-                connString.Open();
-                SqlDataAdapter ad = new SqlDataAdapter(cmd);
-                ad.Fill(dt);
-                return Json(dt);
                 new BBDFundRepository(connString).Add(new Model.BBDFund(1, new DateTime(2022, 2, 15, 10, 30, 0), 2));
                 return Json("worked");
 
