@@ -1,6 +1,6 @@
-﻿using API.Repository;
+﻿using API.Model;
+using API.Repository;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using System.Data.SqlClient;
 
 
@@ -25,8 +25,7 @@ namespace API.Controllers
             connString.Open();
             try
             {
-                new BBDFundRepository(connString).Add(new Model.BBDFund(1, new DateTime(2022, 2, 15, 10, 30, 0), 2));
-                return Json("worked");
+                return Json(new UniversityRepository(connString).GetAll());
 
             }
             catch (Exception ef)
