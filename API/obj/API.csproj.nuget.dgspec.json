@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj": {}
+    "C:\\Users\\bbdnet3333\\BBDAPI\\Ukukhula-api\\API\\API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj": {
+    "C:\\Users\\bbdnet3333\\BBDAPI\\Ukukhula-api\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj",
+        "projectUniqueName": "C:\\Users\\bbdnet3333\\BBDAPI\\Ukukhula-api\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\API.csproj",
-        "packagesPath": "C:\\Users\\bbdnet2897\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bbdnet2897\\Desktop\\ATC_Projects\\c# learning\\Ukukhula-api\\API\\obj\\",
+        "projectPath": "C:\\Users\\bbdnet3333\\BBDAPI\\Ukukhula-api\\API\\API.csproj",
+        "packagesPath": "C:\\Users\\bbdnet3333\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bbdnet3333\\BBDAPI\\Ukukhula-api\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\bbdnet2897\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bbdnet3333\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -47,6 +47,14 @@
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[4.0.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
