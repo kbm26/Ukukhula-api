@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-
 namespace API.Repository
 {
     public interface IRepository<T>
