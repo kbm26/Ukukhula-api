@@ -58,9 +58,6 @@ namespace API.Repository
         public void Update(BBDFund newEntity)
         {
             int entityID = newEntity.FundID;
-
-            BBDFund oldEntity =  GetById(entityID);
-
             string query = $"UPDATE BBDFund SET Budget = {newEntity.Budget}, " +
                 $"Financialyearstart = {newEntity.FundingDate}, " +
                 $"UniversityID = {newEntity.UniversityID} " +

@@ -31,9 +31,9 @@ namespace API.Repository
             foreach (DataRow row in GetDataTable(query).Rows)
             {
                 int Grade = int.Parse(row["Grade"].ToString());
-                int Amount = int.Parse(row["Amount"].ToString()) ;
-                char Comment = char.Parse(row["Comment"].ToString());
-                int Status = int.Parse(row["Staus"].ToString());
+                decimal Amount = decimal.Parse(row["Amount"].ToString()) ;
+                string Comment = (row["Comment"].ToString());
+                int Status = int.Parse(row["StatusID"].ToString());
                 int StudentID = int.Parse(row["StudentID"].ToString());
                 int Year = int.Parse(row["Year"].ToString());
                 yield return new StudentApplication(Grade, Amount, Comment, Status, StudentID, Year);
@@ -47,30 +47,38 @@ namespace API.Repository
 
             DataRow row = GetDataTable(query).Rows[0];
             int Grade = int.Parse(row["Grade"].ToString());
-            int Amount = int.Parse(row["Amount"].ToString());
-            char Comment = char.Parse(row["Comment"].ToString());
-            int Status = int.Parse(row["Staus"].ToString());
+            decimal Amount = decimal.Parse(row["Amount"].ToString());
+            string Comment = (row["Comment"].ToString());
+            int Status = int.Parse(row["StatusID"].ToString());
             int StudentID = int.Parse(row["StudentID"].ToString());
             int Year = int.Parse(row["Year"].ToString());
             entity = new StudentApplication(Grade, Amount, Comment, Status, StudentID, Year);
+            entity.ApplicationID = id;
 
             return entity;
         }
 
         public void Update(StudentApplication newEntity)
         {
-            int entityID = newEntity.ApplicationID;
-
-            StudentApplication oldEntity = GetById(entityID);
-            String query = $"UPDATE StudentApplication SET Grade = {newEntity.Grade} " +
-                $"Amount = {newEntity.Amount}" +
-                $"Comment = {newEntity.Comment} " +
-                $"Status = {newEntity.Status} " +
-                $"StudentID = {newEntity.StudentID} " +
-                $"Year = {newEntity.Year}" +
-                $"WHERE ApplicationID = {entityID} ";
+            string query = @"UPDATE StudentApplication 
+                    SET Grade = @Grade, 
+                        Amount = @Amount, 
+                        Comment = @Comment, 
+                        StatusID = @Status, 
+                        StudentID = @StudentID, 
+                        Year = @Year 
+                    WHERE ApplicationID = @ApplicationID";
 
             SqlCommand command = new SqlCommand(query, connection);
+
+            // Add parameters to the command
+            command.Parameters.AddWithValue("@Grade", newEntity.Grade);
+            command.Parameters.AddWithValue("@Amount", newEntity.Amount);
+            command.Parameters.AddWithValue("@Comment", newEntity.Comment);
+            command.Parameters.AddWithValue("@Status", newEntity.Status);
+            command.Parameters.AddWithValue("@StudentID", newEntity.StudentID);
+            command.Parameters.AddWithValue("@Year", newEntity.Year);
+            command.Parameters.AddWithValue("@ApplicationID", newEntity.ApplicationID);
             command.ExecuteNonQuery();
         }
 

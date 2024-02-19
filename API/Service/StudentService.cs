@@ -1,6 +1,9 @@
-﻿namespace API.Service
+﻿using System.Data.SqlClient;
+
+namespace API.Service
 {
-    public class StudentService
+    public class StudentService(SqlConnection connection)
     {
+
     }
 }

@@ -7,11 +7,11 @@ namespace API.Model
         [Key]
         public int DocumentID;
         [Required]
-        public String Transcript { get; set; }
+        public String Transcript { get; set; } = Transcript;
         [Required]
-        public String IdentityDocument { get; set; }
+        public String IdentityDocument { get; set; } = IdentityDocument;
         [Required]
-        public int ApplicationID { get; set; }
+        public int ApplicationID { get; set; } = ApplicationID;
 
     }
 }
