@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data;
 using System.Data.SqlClient;
 using API.Model;
 
@@ -32,60 +31,32 @@ namespace API.Repository
 
         public IEnumerable<User> GetAll()
         {
-            List<User> users = new List<User>();
-
             string query = "SELECT * FROM Users";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
+            foreach (DataRow row in GetDataTable(query).Rows)
             {
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        User user = new()
-                        {
-                            UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            ContactID = reader.GetInt32(reader.GetOrdinal("ContactID")),
-                            RoleID = reader.GetInt32(reader.GetOrdinal("RoleID"))
-                        };
-
-                        users.Add(user);
-                    }
-                }
+                int UserID = int.Parse(row["UserID"].ToString());
+                int RoleID = int.Parse(row["RoleID"].ToString());
+                int ContactID = int.Parse(row["ContactID"].ToString());
+                string FirstName = row["FirstName"].ToString();
+                string LastName = row["LastName"].ToString();
+                User user = new User(FirstName, LastName, ContactID, RoleID);
+                user.UserID = UserID;
+                yield return user;
             }
 
-            return users;
+
         }
 
         public User GetById(int userId)
         {
-            User user = null;
-
-            string query = "SELECT * FROM Users WHERE UserID = @UserID";
-
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@UserID", userId);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        user = new User
-                        {
-                            UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            ContactID = reader.GetInt32(reader.GetOrdinal("ContactID")),
-                            RoleID = reader.GetInt32(reader.GetOrdinal("RoleID"))
-                        };
-                    }
-                }
-            }
-
-            return user;
+            string query = $"SELECT * FROM Users WHERE UserID = {userId}";
+            DataRow row = GetDataTable(query).Rows[0];
+            int RoleID = int.Parse(row["RoleID"].ToString());
+            int ContactID = int.Parse(row["ContactID"].ToString());
+            string FirstName = row["FirstName"].ToString();
+            string LastName = row["LastName"].ToString();
+            return new User(FirstName, LastName, ContactID, RoleID);
         }
 
         public void Update(User user)
@@ -106,6 +77,15 @@ namespace API.Repository
 
                 command.ExecuteNonQuery();
             }
+        }
+
+        public DataTable GetDataTable(string query)
+        {
+            DataTable dataTable = new DataTable();
+            SqlCommand command = new SqlCommand(query, connection);
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(dataTable);
+            return dataTable;
         }
     }
 }

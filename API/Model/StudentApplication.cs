@@ -2,22 +2,22 @@
 
 namespace API.Model
 {
-    public class StudentApplication(int Grade, int amount, char Comment, int Status,int StudentID, int Year)
+    public class StudentApplication(int Grade, decimal amount, string Comment, int Status,int StudentID, int Year)
     {
         [Key]
         public int ApplicationID;
         [Required]
-        public int Grade { get; set; }
+        public int Grade { get; set; } = Grade;
         [Required]
-        public int Amount { get; set; }
+        public decimal Amount { get; set; } = amount;
         [Required]
-        public char Comment { get; set; }
+        public string Comment { get; set; } = Comment;
         [Required]
-        public int Status { get; set; }
+        public int Status { get; set; } = Status;
         [Required]
-        public int StudentID { get; set; }
+        public int StudentID { get; set; } = StudentID;
         [Required]
-        public int Year { get; set; }
+        public int Year { get; set; } = Year;
 
     }
 }

@@ -30,10 +30,10 @@ namespace API.Repository
 
             foreach (DataRow row in GetDataTable(query).Rows)
             {
-                int IDNumber = int.Parse(row["IDNumber"].ToString());
+                string IDNumber = row["IDNumber"].ToString();
                 DateTime BirhtDate = DateTime.Parse(row["BirthDate"].ToString());
                 int Age = int.Parse(row["Age"].ToString());
-                int Gender = int.Parse(row["Gender"].ToString());
+                string Gender = row["Gender"].ToString();
                 int UserID = int.Parse(row["UserID"].ToString());
                 int RaceID = int.Parse(row["RaceID"].ToString());
                 yield return new StudentInformation(IDNumber, BirhtDate, Age, Gender, UserID, RaceID);
@@ -46,10 +46,10 @@ namespace API.Repository
             string query = $"SELECT * FROM StudentInformation WHERE StudnentID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
-            int IDNumber = int.Parse(row["IDNumber"].ToString());
+            string IDNumber = row["IDNumber"].ToString();
             DateTime BirhtDate = DateTime.Parse(row["BirthhDate"].ToString());
             int Age = int.Parse(row["Age"].ToString());
-            int Gender = int.Parse(row["Gender"].ToString());
+            string Gender = row["Gender"].ToString();
             int UserID = int.Parse(row["UserID"].ToString());
             int RaceID = int.Parse(row["RaceID"].ToString());
             entity = new StudentInformation(IDNumber, BirhtDate, Age, Gender, UserID, RaceID);

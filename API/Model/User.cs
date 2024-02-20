@@ -2,34 +2,23 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Model
 {
-    public class User
+    public class User(string firstName, string lastName, int contactID, int roleID)
     {
         [Key]
         public int UserID { get; set; }
 
         [Required]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = firstName;
 
         [Required]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = lastName;
 
         [Required]
-        public int ContactID { get; set; }
+        public int ContactID { get; set; } = contactID;
 
         [Required]
-        public int RoleID { get; set; }
+        public int RoleID { get; set; } = roleID;
 
-        public User()
-        {
 
-        }
-
-        public User(string firstName, string lastName, int contactID, int roleID)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            ContactID = contactID;
-            RoleID = roleID;
-        }
     }
 }
