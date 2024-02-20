@@ -3,11 +3,11 @@
 namespace API.Model
 {
 
-    public class UniversityFundApplication(int ApplicationID, int universityID, DateTime fundingYear, decimal amount, int statusID, string comment)
+    public class UniversityFundApplication( int universityID, DateTime fundingYear, decimal amount, int statusID, string comment)
     {
 
         [Key]
-        public int ApplicationID { get; set; } = ApplicationID;
+        public int ApplicationID { get; set; } 
         [Required]
         public int UniversityID { get; set; } = universityID;
         [Required]

@@ -20,12 +20,9 @@ namespace API.Repository
 
         public void Add(User user)
         {
-            string query = "INSERT INTO User" +
-                "SET FirstName = @FirstName," +
-                    "LastName = @LastName," +
-                    "ContactID = @ContactID," +
-                    "RoleID = @RoleID," +
-                "WHERE UserID = @UserID";
+            string query = "INSERT INTO [dbo].[User] (FirstName, LastName, ContactID, RoleID)" +
+                "VALUES (@FirstName, @LastName, @ContactID, @RoleID)";
+
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -49,14 +46,14 @@ namespace API.Repository
                 string LastName = row["LastName"].ToString();
                 int ContactID = (int)row["ContactID"];
                 int RoleID = (int)row["RoleID"];
-                User user = new User(UserID, FirstName, LastName, ContactID, RoleID);
+                User user = new User( FirstName, LastName, ContactID, RoleID);
                 user.UserID = (int)row["UserID"];
                 yield return user;
             }
         }
         public User GetById(int id)
         {
-            string query = $"SELECT * FROM User WHERE UserID = {id}";
+            string query = $"SELECT * FROM [dbo].[User] WHERE UserID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
             int UserID = (int)row["UserID"];
@@ -64,17 +61,16 @@ namespace API.Repository
             string LastName = row["LastName"].ToString();
             int ContactID = (int) row["ContactID"];
             int RoleID = (int) row["RoleID"];
-            return new User(UserID, FirstName, LastName, ContactID, RoleID);
+            User user = new User(FirstName, LastName, ContactID, RoleID);
+            user.UserID = (int)row["UserID"];
+            return user;
         }
 
         public void Update(User newEntity)
         {
-            string query = @"UPDATE User" + 
-                    "SET FirstName = @FirstName, " + 
-                        "LastName = @LastName, " + 
-                        "ContactID = @ContactID, " + 
-                        "RoleID = @RoleID " +
-                    "WHERE UserID = @UserID";
+            string query = @"UPDATE [dbo].[User] SET FirstName = @FirstName, LastName = @LastName,
+                            ContactID = @ContactID, RoleID = @RoleID 
+                            WHERE UserID = @UserID";
 
             SqlCommand command = new SqlCommand(query, connection);
 

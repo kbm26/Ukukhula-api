@@ -2,10 +2,10 @@
 
 namespace API.Model
 {
-    public class University(int UniversityID, string Name, int ProvinceID)
+    public class University( string Name, int ProvinceID)
     {
         [Key]
-        public int UniversityID { get; set; } = UniversityID;
+        public int UniversityID { get; set; } 
         [Required]
 
         public string Name { get; set; } = Name;

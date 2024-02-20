@@ -8,15 +8,12 @@ namespace API.Repository
     {
         public void Add(University entity)
         {
-            string query = "INSERT INTO University" +
-                "SET Name = @Name, " +
-                    "ProvinceID = @ProvinceID, " +
-                "WHERE UniversityID = @UniversityID";
+            string query = "INSERT INTO University (Name, ProvinceID) VALUES (@Name, @ProvinceID) ";
+                
 
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@Name", entity.Name);
             command.Parameters.AddWithValue("@ProvinceID", entity.ProvinceID);
-            command.Parameters.AddWithValue("@UniversityID", entity.UniversityID);
             command.ExecuteNonQuery();
         }
 
@@ -29,7 +26,7 @@ namespace API.Repository
                 int UniversityID = int.Parse(row["UniversityID"].ToString());
                 string Name = row["Name"].ToString();
                 int ProvinceID = int.Parse(row["ProvinceID"].ToString());
-                University university = new University(UniversityID, Name, ProvinceID);
+                University university = new University(Name, ProvinceID);
                 university.UniversityID = int.Parse(row["UniversityID"].ToString());
                 yield return university;
             }
@@ -43,15 +40,15 @@ namespace API.Repository
             int UniversityID = int.Parse(row["UniversityID"].ToString());  
             string Name = row["Name"].ToString();
             int ProvinceID = int.Parse(row["ProvinceID"].ToString());
-            return new University(UniversityID, Name,ProvinceID);
+            University uni = new University(Name, ProvinceID);
+            uni.UniversityID = int.Parse(row["UniversityID"].ToString());
+
+            return uni;
         }
 
         public void Update(University newEntity)
         {
-            string query = @"UPDATE University " +
-                    "SET Name = @Name, " + 
-                        "ProvinceID = @ProvinceID, " + 
-                    "WHERE UniversityID = @UniversityID";
+            string query = @"UPDATE University SET Name = @Name, ProvinceID = @ProvinceID WHERE UniversityID = @UniversityID";
 
             SqlCommand command = new SqlCommand(query, connection);
 

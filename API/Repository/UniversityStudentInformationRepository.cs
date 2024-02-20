@@ -8,9 +8,8 @@ namespace API.Repository
     {
         public void Add(UniversityStudentInformation entity)
         {
-            string query = "INSERT INTO UniversityFundApplication " +
-                "SET StudentID = @StudentID," +
-                "WHERE UniverstyID = @UniverstyID";
+            string query = @"INSERT INTO UniversityStudentInformation (UniversityID, StudentID) 
+                            VALUES (@UniversityID, @StudentID)";
 
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@StudentID", entity.StudentID);
@@ -45,14 +44,9 @@ namespace API.Repository
 
         public void Update(UniversityStudentInformation newEntity)
         {
-            string query = @"UPDATE UniversityStudentInformation" +
-                    "SET StudentID = @StudentID, " +
-                        
-                    "WHERE UniversityID = @UniversityID";
+            string query = @"UPDATE UniversityStudentInformation SET StudentID = @StudentID WHERE UniversityID = @UniversityID";
 
             SqlCommand command = new SqlCommand(query, connection);
-
-            
             command.Parameters.AddWithValue("@StudentID", newEntity.StudentID);
             command.Parameters.AddWithValue("@UniversitID", newEntity.UniversityID);
             command.ExecuteNonQuery();

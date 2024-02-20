@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Model
 {
-    public class User(int UserID, string FirstName, string LastName, int ContactID, int RoleID)
+    public class User(string FirstName, string LastName, int ContactID, int RoleID)
     {
         [Key]
-        public int UserID { get; set; } = UserID;
+        public int UserID { get; set; } 
 
         [Required]
         public string FirstName { get; set; } = FirstName;

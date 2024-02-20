@@ -4,7 +4,7 @@ namespace API.Model
 {
     public class UniversityStudentInformation(int StudentID, int UniversityID)
     {
-        [Key]
+        [Required]
         public int StudentID { get; set; } = StudentID;
         [Required]
         public int UniversityID { get; set; } = UniversityID;

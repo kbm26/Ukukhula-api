@@ -28,12 +28,13 @@ namespace API.Controllers
             connString.Open();
             try
             {
+                User s = new Model.User("Kyle", "Moodley", 1, 1);
+                s.UserID = 11;
+
+                new UserRepository(connString).Update(s);
 
 
-                StudentApplication s = new StudentApplication(78, 100000, "Very hard working student", 1, 5, 2020);
-                
-                new StudentApplicationRepository(connString).Add(s);
-                return Json("Work");
+                return Json("worked");
 
             }
             catch (Exception ef)

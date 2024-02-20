@@ -2,7 +2,7 @@
 
 namespace API.Model
 {
-    public class StudentInformation(string IDNumber, DateTime BirthDate, int Age, string Gender, int UserID, int RaceID)
+    public class StudentInformation(string IDNumber, DateTime BirthDate,  string Gender, int UserID, int RaceID)
     {
         [Key]
         public int StudentID { get; set; } 
@@ -11,7 +11,7 @@ namespace API.Model
         [Required]
         public DateTime BirthDate { get; set; } = BirthDate;
         [Required]
-        public int Age { get; set; } = Age;
+        public int Age { get; set; }
         [Required]
         public string Gender { get; set; } = Gender;
         [Required]
