@@ -3,26 +3,15 @@ using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddScoped<IContactDetailsRepository, ContactDetailsRepository>();
-//builder.Services.AddScoped<IHODRepository, HODRepository>();
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 builder.Services.AddControllers().AddNewtonsoftJson();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-/*
-builder.Services.AddControllersWithViews()
-.AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-});
-*/
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

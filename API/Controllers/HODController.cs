@@ -35,6 +35,22 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet(Name = "GetAllAprovedStudents/{name}/{year}")]
+        public JsonResult GetAllAprovedStudents(string name, int year) {
+            try
+            {
+                ;
+                return Json(new HODService(connection).getAllApprovedStudents(name, year));
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+        }
+
+
+
 
     }
 }

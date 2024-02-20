@@ -50,7 +50,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet(Name = "GetUniversityAnnualExpenditure/{year}/name")]
+        [HttpGet(Name = "GetUniversityAnnualExpenditure/{year}/{name}")]
         public JsonResult GetUniversityAnnualExpenditure(int year, string name )
         {
 
