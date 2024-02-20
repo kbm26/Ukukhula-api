@@ -8,11 +8,17 @@ namespace API.Repository
     {
         public void Add(UniversityFundApplication entity)
         {
-            string query = "INSERT INTO UniversityFundApplication " +
-                            "([UniversityID],[FundingYear],[Amount],[StatusID],[Comment]) " +
-                            $"VALUES ({entity.UniversityID},  '{entity.FundingYear.Date}', {entity.Amount}, {entity.StatusID}, '{entity.Comment}' ) ";
+            string query = @"INSERT INTO UniversityFundApplication  (UniversityID, FundingYear, Amount, StatusID, Comment)
+                               VALUES (@UniversityID, @FundingYear,  @Amount,  @StatusID, @Comment)";
+                    
 
             SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@UniversityID", entity.UniversityID);
+            command.Parameters.AddWithValue("@FundingYear", entity.FundingYear);
+            command.Parameters.AddWithValue("@Amount", entity.Amount);
+            command.Parameters.AddWithValue("@StatusID", entity.StatusID);
+            command.Parameters.AddWithValue("@Comment", entity.Comment);
+
             command.ExecuteNonQuery();
         }
 
@@ -21,16 +27,16 @@ namespace API.Repository
             string query = $"SELECT * FROM UniversityFundApplication";
 
             foreach (DataRow row in GetDataTable(query).Rows)
-            {   
-
+            {
+                int ApplicationID = int.Parse(row["ApplicationID"].ToString());
                 int UniversityID = int.Parse(row["UniversityID"].ToString());
                 DateTime fundDate = DateTime.Parse(row["FundingYear"].ToString());
                 decimal amount = decimal.Parse(row["Amount"].ToString());
                 int StatusID = int.Parse(row["StatusID"].ToString());
                 string comment = row["Comment"].ToString();
-                UniversityFundApplication fund =    new UniversityFundApplication(UniversityID, fundDate, amount, StatusID, comment ?? "");
-                fund.ApplicationID = int.Parse(row["ApplicationID"].ToString());
-                yield return fund;
+                UniversityFundApplication universityFundapplication = new UniversityFundApplication( UniversityID, fundDate, amount, StatusID, comment);
+                universityFundapplication.ApplicationID = int.Parse(row["ApplicationID"].ToString());
+                yield return universityFundapplication;
 
             }
         }
@@ -40,12 +46,15 @@ namespace API.Repository
             string query = $"SELECT * FROM UniversityFundApplication WHERE ApplicationID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
+            int ApplicationID = int.Parse(row["ApplicationID"].ToString()) ;
             int UniversityID = int.Parse(row["UniversityID"].ToString());
             DateTime fundDate = DateTime.Parse(row["FundingYear"].ToString());
             decimal amount = decimal.Parse(row["Amount"].ToString());
             int StatusID = int.Parse(row["StatusID"].ToString());
             string comment = row["Comment"].ToString();
-            return new UniversityFundApplication(UniversityID,fundDate,amount,StatusID, comment ?? "");
+            UniversityFundApplication entity = new UniversityFundApplication(UniversityID, fundDate, amount, StatusID, comment);
+            entity.ApplicationID = id;
+            return entity;
 
 
 
@@ -53,16 +62,13 @@ namespace API.Repository
 
         public void Update(UniversityFundApplication newEntity)
         {
-            string query = @"UPDATE UniversityStudentInformation 
-                    SET UniversityID = @UniversityID,
-                        FundingYear = @FundingYear, 
-                        Amount = @Amount, 
-                        StatusID = @StatusID, 
-                        Comment = @Comment 
-                    WHERE ApplicationID = @ApplicationID";
+            string query = @"UPDATE UniversityFundApplication SET UniversityID = @UniversityID, 
+                            FundingYear = @FundingYear, Amount = @Amount, StatusID = @StatusID, 
+                            Comment = @Comment WHERE ApplicationID = @ApplicationID";
 
             SqlCommand command = new SqlCommand(query, connection);
 
+            
             command.Parameters.AddWithValue("@UniversityID", newEntity.UniversityID);
             command.Parameters.AddWithValue("@FundingYear", newEntity.FundingYear);
             command.Parameters.AddWithValue("@Amount", newEntity.Amount);

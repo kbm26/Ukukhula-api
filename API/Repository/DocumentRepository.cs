@@ -2,7 +2,9 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection.Metadata;
+using System.Security.Cryptography;
 using Document = API.Model.Document;
+
 
 namespace API.Repository
 {
@@ -17,10 +19,16 @@ namespace API.Repository
         public void Add(Document entity)
         {
             String query = "INSERT INTO Document " +
-                "([Transcript], [IdentityDocument], [ApplicationID]) " +
-                $"VALUES ({entity.Transcript}, '{entity.IdentityDocument}', {entity.ApplicationID}) ";
+               "([Transcript], [IdentityDocument], [ApplicationID]) " +
+               "VALUES (CONVERT(varbinary(max), @Transcript), CONVERT(varbinary(max), @IdentityDocument), @ApplicationID)";
+
+
 
             SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Transcript", entity.Transcript);
+            command.Parameters.AddWithValue("@IdentityDocument", entity.IdentityDocument);
+            command.Parameters.AddWithValue("@ApplicationID", entity.ApplicationID);
+
             command.ExecuteNonQuery();
 
         }
@@ -34,7 +42,9 @@ namespace API.Repository
                 String Transcript = (row["Transcript"].ToString());
                 String IdenetityDocument = (row)["IdentityDocument"].ToString();
                 int ApplicationID = Convert.ToInt32(row["ApplicationID"]); ;
-                yield return new Document(Transcript, IdenetityDocument, ApplicationID);
+                Document document = new Document(Transcript, IdenetityDocument, ApplicationID);
+                document.DocumentID = int.Parse(row["DocumentID"].ToString());
+                yield return document;
 
             }
         }
@@ -48,23 +58,25 @@ namespace API.Repository
             String Transcript = (row["Transcript"].ToString());
             String IdenetityDocument = (row)["IdentityDocument"].ToString();
             int ApplicationID = Convert.ToInt32(row["ApplicationID"]); ;
-            entity = new Document(Transcript, IdenetityDocument, ApplicationID);
-
-            return entity;
+            return new Document(Transcript, IdenetityDocument, ApplicationID);
 
         }
 
         public void Update(Document newEntity)
         {
-            int entityID = newEntity.DocumentID;
-
-            Document oldEntity = GetById(entityID);
-            String query = $"UPDATE Document SET Transcript = {newEntity.Transcript} " +
-                $"IdentityDocument = {newEntity.IdentityDocument}" +
-                $"ApplicationID = {newEntity.ApplicationID} " +
-                $"WHERE DocumentID = {entityID} ";
+            string query = @"UPDATE Document" + 
+                    "SET Transcript = @Transcript, " + 
+                        "IdentityDocument = @IdentityDocument, " +
+                        "ApplicationID = @ApplicationID, "+
+                    "WHERE DocumentID = @DocumentID";
 
             SqlCommand command = new SqlCommand(query, connection);
+
+            
+            command.Parameters.AddWithValue("@Transcript", newEntity.Transcript);
+            command.Parameters.AddWithValue("@IdentityDocument", newEntity.IdentityDocument);
+            command.Parameters.AddWithValue("@ApplicationID", newEntity.ApplicationID);
+            command.Parameters.AddWithValue("@DocumentID", newEntity.DocumentID);
             command.ExecuteNonQuery();
         }
 

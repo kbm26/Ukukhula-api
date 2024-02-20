@@ -11,43 +11,49 @@ namespace API.Repository
 
         public void Add(BBDFund entity)
         {
-            string query = "INSERT INTO BBDFund "+
-                "([Budget], [FinancialYearStart], [UniversityID]) "+
-                $"VALUES ({entity.Budget}, '{entity.FundingDate.Date}', {entity.UniversityID}) ";
+            string query = "INSERT INTO BBDFund " +
+                "([Budget], [FinancialYearStart], [UniversityID]) " +
+                $"VALUES (@Budget, @FinancialYearStart, @UniversityID) ";
+
 
             SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Budget", entity.Budget);
+            command.Parameters.AddWithValue("@FinancialYearStart", entity.UniversityID);
+            command.Parameters.AddWithValue("@UniveersityID", entity.UniversityID);
             command.ExecuteNonQuery();
             
         }
 
         public IEnumerable<BBDFund> GetAll()
         {
-            //SELECT * FROM BBDFUND
-            //turn that data into bbdfund model objects
+            
             string query = $"SELECT * FROM BBDFUND";
 
             foreach(DataRow row in  GetDataTable(query).Rows)
             {
+                int FundID = int.Parse(row["FundID"].ToString());
                 decimal budget = decimal.Parse(row["Budget"].ToString());
-                DateTime fundDate = DateTime.Parse(row["Financialyearstart"].ToString());
+                DateTime FinancialYearStart = DateTime.Parse(row["Financialyearstart"].ToString());
                 int UniversityID = int.Parse(row["UniversityID"].ToString());
-                yield return  new BBDFund(budget, fundDate, UniversityID);
+                BBDFund bBDFund = new BBDFund(budget, FinancialYearStart, UniversityID);
+                bBDFund.FundID = int.Parse(row["FundID"].ToString()) ;
+                yield return bBDFund;
             }
 
         }
 
         public BBDFund GetById(int id)
-        {   //SELECT * FROM BBDFUND WHERE FundID = {id}
-            //turn that data into bbdfund model object
+        {   
         
             BBDFund entity;
             string query = $"SELECT * FROM BBDFUND WHERE FundID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
+            int FundID = int.Parse(row["FundID"].ToString());
             decimal budget = decimal.Parse(row["Budget"].ToString());
-            DateTime fundDate = DateTime.Parse(row["Financialyearstart"].ToString());
+            DateTime FinancialYearStart = DateTime.Parse(row["Financialyearstart"].ToString());
             int UniversityID = int.Parse(row["UniversityID"].ToString());
-            entity = new BBDFund(budget,fundDate, UniversityID);
+            entity = new BBDFund(budget,FinancialYearStart, UniversityID);
 
 
             return entity;
@@ -57,15 +63,22 @@ namespace API.Repository
 
         public void Update(BBDFund newEntity)
         {
-            int entityID = newEntity.FundID;
-            string query = $"UPDATE BBDFund SET Budget = {newEntity.Budget}, " +
-                $"Financialyearstart = {newEntity.FundingDate}, " +
-                $"UniversityID = {newEntity.UniversityID} " +
-                $"WHERE FundID = {entityID} ";
+            string query = @"UPDATE BBDFund
+                     SET Budget = @Budget,
+                         FinancialYearStart = @FinancialYearStart,
+                         UniversityID = @UniversityID
+                     WHERE FundID = @FundID";
 
             SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Budget", newEntity.Budget);
+            command.Parameters.AddWithValue("@FinancialYearStart", newEntity.FinancialYearStart);
+            command.Parameters.AddWithValue("@UniversityID", newEntity.UniversityID);
+            command.Parameters.AddWithValue("@FundID", newEntity.FundID); 
+
             command.ExecuteNonQuery();
         }
+
 
         public DataTable GetDataTable(string query)
         {
