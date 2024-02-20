@@ -5,6 +5,7 @@ using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using Document = API.Model.Document;
 
+
 namespace API.Repository
 {
     public class DocumentRepository : IRepository<Document>
@@ -18,19 +19,15 @@ namespace API.Repository
         public void Add(Document entity)
         {
             String query = "INSERT INTO Document " +
-                "SET Transcript = @Transcript, " +
-                    "IdentityDocument = @IdentityDocument, " +
-                    "ApplicationID = @ApplicationID, " +
-                "WHERE DocumentID = @DocumentID";
-            
+               "([Transcript], [IdentityDocument], [ApplicationID]) " +
+               "VALUES (CONVERT(varbinary(max), @Transcript), CONVERT(varbinary(max), @IdentityDocument), @ApplicationID)";
+
+
 
             SqlCommand command = new SqlCommand(query, connection);
-
             command.Parameters.AddWithValue("@Transcript", entity.Transcript);
-            command.Parameters.AddWithValue("@IdentityDocment", entity.IdentityDocument);
+            command.Parameters.AddWithValue("@IdentityDocument", entity.IdentityDocument);
             command.Parameters.AddWithValue("@ApplicationID", entity.ApplicationID);
-            command.Parameters.AddWithValue("@DocumentID", entity.DocumentID);
-
 
             command.ExecuteNonQuery();
 
@@ -42,11 +39,10 @@ namespace API.Repository
 
             foreach(DataRow row in GetDataTable(query).Rows)
             {
-                int DocumentID = int.Parse(row["DocumentID"].ToString());
                 String Transcript = (row["Transcript"].ToString());
                 String IdenetityDocument = (row)["IdentityDocument"].ToString();
                 int ApplicationID = Convert.ToInt32(row["ApplicationID"]); ;
-                Document document = new Document(DocumentID, Transcript, IdenetityDocument, ApplicationID);
+                Document document = new Document(Transcript, IdenetityDocument, ApplicationID);
                 document.DocumentID = int.Parse(row["DocumentID"].ToString());
                 yield return document;
 
@@ -59,11 +55,10 @@ namespace API.Repository
             string query = $"SELECT * FROM Document WHERE DocumentID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
-            int DocumentID = int.Parse(row["DocumentID"].ToString());
             String Transcript = (row["Transcript"].ToString());
             String IdenetityDocument = (row)["IdentityDocument"].ToString();
             int ApplicationID = Convert.ToInt32(row["ApplicationID"]); ;
-            return new Document(DocumentID, Transcript, IdenetityDocument, ApplicationID);
+            return new Document(Transcript, IdenetityDocument, ApplicationID);
 
         }
 

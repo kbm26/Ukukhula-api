@@ -33,8 +33,13 @@ namespace API.Controllers
 
                 new UserRepository(connString).Update(s);
 
+<<<<<<< Updated upstream
 
                 return Json("worked");
+=======
+                new DocumentRepository(connString).Add(new Document("jj","efu", 8));
+                return Json("Work");
+>>>>>>> Stashed changes
 
             }
             catch (Exception ef)
