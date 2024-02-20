@@ -15,14 +15,8 @@ namespace API.Repository
         }
         public void Add(StudentInformation entity)
         {
-            String query = "INSERT INTO StudentInformation" +
-                "SET IDNumber = @IDNumber," +
-                    "BirthDate = @BirthDate," +
-                    "Age = @Age," +
-                    "Gender = @Gender," +
-                    "UserID = @UserID," +
-                    "RaceID = @RaceID," +
-                "WHERE StudentID = @StudentID";
+            String query = @"INSERT INTO StudentInformation (IDNumber, BirthDate, Age, Gender, UserID, RaceID)
+                            (@IDNumber, @BirthDate,  @Age, @Gender, @UserID, @RaceID)";
 
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@IDNumber", entity.IDNumber);

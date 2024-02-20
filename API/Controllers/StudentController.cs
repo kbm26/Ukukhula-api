@@ -29,10 +29,10 @@ namespace API.Controllers
             try
             {
 
-                IEnumerable < University >  unis = new UniversityRepository(connString).GetAll();
-                IEnumerable<UniversityFundApplication> unifunds = new UniversityFundApplicationRepository(connString).GetAll();
 
-                new BBDFundRepository(connString).Add(new BBDFund(1, DateTime.Now, 3));
+                StudentApplication s = new StudentApplication(78, 100000, "Very hard working student", 1, 5, 2020);
+                
+                new StudentApplicationRepository(connString).Add(s);
                 return Json("Work");
 
             }
