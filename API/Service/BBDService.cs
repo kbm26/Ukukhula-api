@@ -9,7 +9,7 @@ namespace API.Service
     public class BBDService(SqlConnection connection)
     {
 
-        public object approveStudentApplication(ApplicationDTO applicationDTO) {
+        public object approveStudentApplication(ApplicationApprovalDTO applicationDTO) {
 
 
             try
@@ -37,7 +37,7 @@ namespace API.Service
 
         }
 
-        public object approveUniversityApplication(UniversityFundApplicationDTO applicationDTO)
+        public object approveUniversityApplication(ApplicationApprovalDTO applicationDTO)
         {
 
 
@@ -65,7 +65,7 @@ namespace API.Service
 
         }
 
-        public object getAnnualExpenditure(UniversityDTO universityDTO)
+        public object getAnnualExpenditure(AnnualExpenditure universityDTO)
         {
 
             try {
@@ -137,14 +137,17 @@ namespace API.Service
             {
                 IEnumerable<University> universities = new UniversityRepository(connection).GetAll();
                 IEnumerable<int> universityIDs = findUniversityIDs(universities);
-                BBDFundRepository repo = new BBDFundRepository(connection);
+                BBDFundRepository BBDRepo = new BBDFundRepository(connection);
+                UniversityFundApplicationRepository universityFund = new UniversityFundApplicationRepository(connection);
                 DateTime dateTime = DateTime.Now;
                 int budget = Totalbudget / universityIDs.Count();
 
                 foreach (int universityID in universityIDs)
                 {
                     BBDFund fund = new BBDFund(budget, dateTime, universityID);
-                    repo.Add(fund);
+                    UniversityFundApplication uniFund = new UniversityFundApplication(universityID, dateTime, budget, 1, "Approved");
+                    BBDRepo.Add(fund);
+                    universityFund.Add(uniFund);
                 }
 
                 return new
@@ -163,11 +166,49 @@ namespace API.Service
             }
         }
 
+        public object GetUniversityFundApplication(int id)
+        {
+
+            try
+            {
+
+                UniversityFundApplication applicant = new UniversityFundApplicationRepository(connection).GetById(id);
+                University university = new UniversityRepository(connection).GetById(applicant.UniversityID);
+                return new
+                {
+                    name = university.Name,
+                    year = applicant.FundingYear.Year,
+                    amount = applicant.Amount,
+                    comment = applicant.Comment,
+                    status = status(applicant.StatusID)
+                };
+
+
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    message = "Failed to create university fund application",
+
+                };
+            }
+        }
+        public string status(int id)
+        {
+            if (id == 1) { return "Approved"; }
+            else if (id == 2) { return "Rejected"; }
+            else if (id == 3) { return "Pending"; }
+            else { return "N/A"; }
+        }
+
+
         public IEnumerable<int> findUniversityIDs(IEnumerable<University> universities) {
             foreach (University university in universities) {
                 yield return university.UniversityID;
             }
         }
+
 
 
 

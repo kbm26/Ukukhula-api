@@ -39,7 +39,7 @@ namespace API.Controllers
         }
 
         [HttpPost(Name = "CreateStudent")]
-        public JsonResult CreateStudent() {
+        public JsonResult CreateStudent(StudentDTO studentDTO) {
 
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,42 @@ namespace API.Controllers
             }
             try
             {
-                return Json("pass");
+                return Json(new HODService(connection).createStudent(studentDTO) );
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+        }
+
+        [HttpPost(Name = "CreateStudentApplication")]
+        public JsonResult CreateStudentApplication(StudentApplicationDTO studentApplicationDTO) {
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new HODService(connection).createStudentApplication(studentApplicationDTO));
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+        }
+
+        [HttpGet(Name = "GetStudentApplication/{id}")]
+        public JsonResult GetStudentApplicationByID(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new HODService(connection).getStudentApplication(id));
 
             }
             catch (Exception ef)

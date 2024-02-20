@@ -25,8 +25,8 @@ namespace API.Controllers
             
 
 
-        [HttpPost(Name = "PostNewStudent")]
-        public JsonResult updateStudent(StudentApplicationDetailsDTO studentApplicationDetailsDTO)
+        [HttpPost(Name = "CreateUniversity")]
+        public JsonResult CreateUniversity(UniversityDTO universityDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +34,7 @@ namespace API.Controllers
             }
             try
             {
-                return Json(new HODService(connection).updateStudent(studentApplicationDetailsDTO));
+                return Json(new UniversityService(connection).CreateUniversity(universityDTO));
 
             }
             catch (Exception ef)
@@ -43,9 +43,45 @@ namespace API.Controllers
             }
         }
 
+        [HttpPost(Name = "CreateUniversityFundApplication")]
+        public JsonResult CreateUniversityFundApplication(UniversityApplicationDTO universityDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new UniversityService(connection).CreateUniversityFundApplication(universityDTO));
 
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+        }
 
+        [HttpGet(Name = "GetAllUniversities")]
+        public JsonResult GetAllUniversities() {
 
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new UniversityService(connection).getAllUniversities());
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
 
         }
+
+
+
+
+    }
 }

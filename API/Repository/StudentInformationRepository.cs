@@ -57,7 +57,7 @@ namespace API.Repository
             DataRow row = GetDataTable(query).Rows[0];
             int StudentID = int.Parse(row["StudentID"].ToString());
             string IDNumber =(row["IDNumber"].ToString());
-            DateTime BirhtDate = DateTime.Parse(row["BirthhDate"].ToString());
+            DateTime BirhtDate = DateTime.Parse(row["BirthDate"].ToString());
             int Age = int.Parse(row["Age"].ToString());
             string Gender = (row["Gender"].ToString());
             int UserID = int.Parse(row["UserID"].ToString());
