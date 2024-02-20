@@ -24,23 +24,12 @@ namespace API.Controllers
         [HttpPost(Name = "UpdateStudent")]
         public JsonResult updateStudent(StudentApplicationDetailsDTO studentApplicationDetailsDTO)
         {
+            if (!ModelState.IsValid) { 
+                return Json("Bad request");
+            }
             try
             {
                 return Json(new HODService(connection).updateStudent(studentApplicationDetailsDTO));
-
-            }
-            catch (Exception ef)
-            {
-                return Json(ef.Message);
-            }
-        }
-
-        [HttpGet(Name = "GetAllAprovedStudents/{name}/{year}")]
-        public JsonResult GetAllAprovedStudents(string name, int year) {
-            try
-            {
-                ;
-                return Json(new HODService(connection).getAllApprovedStudents(name, year));
 
             }
             catch (Exception ef)

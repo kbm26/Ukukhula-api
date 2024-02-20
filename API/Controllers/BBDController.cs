@@ -21,7 +21,10 @@ namespace API.Controllers
         [HttpPost(Name = "PostStudentFundApproval")]
         public JsonResult PostStudentFundApproval(ApplicationDTO studentApplication)
         {
-
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
             try
             {
                 return Json(new BBDService(connection).approveStudentApplication(studentApplication));
@@ -37,6 +40,10 @@ namespace API.Controllers
         [HttpPost(Name = "PostUniversityFundApproval")]
         public JsonResult PostUniversityFundApproval(UniversityFundApplicationDTO universityFundApplication)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
             try
             {
                 return Json(new BBDService(connection).approveUniversityApplication(universityFundApplication));
@@ -53,7 +60,10 @@ namespace API.Controllers
         [HttpGet(Name = "GetUniversityAnnualExpenditure/{year}/{name}")]
         public JsonResult GetUniversityAnnualExpenditure(int year, string name )
         {
-
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
             UniversityDTO universityDTO = new UniversityDTO();
             universityDTO.year = year;
             universityDTO.Name = name;
@@ -72,6 +82,10 @@ namespace API.Controllers
         [HttpGet(Name = "GetTotalSpentOnUniversities")]
         public JsonResult GetTotalSpentOnUniversities()
         {
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
             try
             {
                 return Json(new BBDService(connection).getTotalSpent());
@@ -86,6 +100,11 @@ namespace API.Controllers
         [HttpPost(Name = "DistributeFunds/{amount}")]
 
         public JsonResult DistributeFunds(int amount) {
+
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
             try
             {
                 return Json(new BBDService(connection).distributeFunds(amount));
