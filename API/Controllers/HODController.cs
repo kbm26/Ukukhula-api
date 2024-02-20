@@ -21,8 +21,8 @@ namespace API.Controllers
         }
 
 
-        [HttpPost(Name = "UpdateStudent")]
-        public JsonResult updateStudent(StudentApplicationDetailsDTO studentApplicationDetailsDTO)
+        [HttpPost(Name = "UpdateStudentApplication")]
+        public JsonResult UpdateStudentApplication(StudentApplicationDetailsDTO studentApplicationDetailsDTO)
         {
             if (!ModelState.IsValid) { 
                 return Json("Bad request");
@@ -30,6 +30,24 @@ namespace API.Controllers
             try
             {
                 return Json(new HODService(connection).updateStudent(studentApplicationDetailsDTO));
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+        }
+
+        [HttpPost(Name = "CreateStudent")]
+        public JsonResult CreateStudent() {
+
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json("pass");
 
             }
             catch (Exception ef)

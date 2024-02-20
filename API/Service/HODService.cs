@@ -15,7 +15,7 @@ namespace API.Service
                 StudentApplicationRepository applicationRepo = new StudentApplicationRepository(connection);
                 StudentApplication application = applicationRepo.GetById(studentApplicationDTO.ApplicationID);
                 StudentApplication studentApplication = new StudentApplication(studentApplicationDTO.Grade, studentApplicationDTO.Amount,
-                studentApplicationDTO.Comment, application.Status, application.StudentID, application.Year);
+                studentApplicationDTO.Comment, application.StatusID, application.StudentID, application.Year);
                 studentApplication.ApplicationID = studentApplicationDTO.ApplicationID;
                 applicationRepo.Update(studentApplication);
                 return new

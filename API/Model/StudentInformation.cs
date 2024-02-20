@@ -11,7 +11,7 @@ namespace API.Model
         [Required]
         public DateTime BirthDate { get; set; } = BirthDate;
         [Required]
-        public int Age { get; set; } = Age;
+        public int Age { get; set; } 
         [Required]
         public string Gender { get; set; } = Gender;
         [Required]

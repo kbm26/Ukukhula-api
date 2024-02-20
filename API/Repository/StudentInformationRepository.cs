@@ -64,7 +64,7 @@ namespace API.Repository
             int RaceID = int.Parse(row["RaceID"].ToString());
             entity = new StudentInformation( IDNumber, BirhtDate,  Gender, UserID, RaceID);
             entity.Age = Age;
-
+            entity.StudentID = StudentID;
 
             return entity;
 

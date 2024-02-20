@@ -16,11 +16,13 @@ namespace API.Service
             {
                 StudentApplicationRepository applicationRepo = new StudentApplicationRepository(connection);
                 StudentApplication application = applicationRepo.GetById(applicationDTO.ApplicationID);
-                application.Status = applicationDTO.StatusID;
+                application.StatusID = applicationDTO.StatusID;
                 applicationRepo.Update(application);
                 return new
                 {
-                    message = "Application status updated successfully"
+                    message = "Application status updated successfully",
+                    id = applicationDTO.ApplicationID,
+                    body = application
                 };
             }
             catch (Exception ex)
@@ -74,7 +76,7 @@ namespace API.Service
                 var Total = (from University in universities
                              join universityStudent in universityStudents on University.UniversityID equals universityStudent.UniversityID
                              join studentApplication in studentApplications on universityStudent.StudentID equals studentApplication.StudentID
-                             where studentApplication.Status == 1
+                             where studentApplication.StatusID == 1
                              where University.Name == universityDTO.Name
                              where studentApplication.Year == universityDTO.year
                              select studentApplication.Amount).Sum();
@@ -110,7 +112,7 @@ namespace API.Service
                             select new
                             {
                                 name = University.Name,
-                                year = fund.FundingDate.Year,
+                                year = fund.FinancialYearStart.Year,
                                 amount = fund.Budget
 
                             };

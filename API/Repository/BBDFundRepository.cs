@@ -13,13 +13,13 @@ namespace API.Repository
         {
             string query = "INSERT INTO BBDFund " +
                 "([Budget], [FinancialYearStart], [UniversityID]) " +
-                $"VALUES (@Budget, @FinancialYearStart, @UniversityID) ";
+                "VALUES (@Budget, @FinancialYearStart, @UniversityID) ";
 
 
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@Budget", entity.Budget);
-            command.Parameters.AddWithValue("@FinancialYearStart", entity.UniversityID);
-            command.Parameters.AddWithValue("@UniveersityID", entity.UniversityID);
+            command.Parameters.AddWithValue("@FinancialYearStart", entity.FinancialYearStart);
+            command.Parameters.AddWithValue("@UniversityID", entity.UniversityID);
             command.ExecuteNonQuery();
             
         }
@@ -54,6 +54,7 @@ namespace API.Repository
             DateTime FinancialYearStart = DateTime.Parse(row["Financialyearstart"].ToString());
             int UniversityID = int.Parse(row["UniversityID"].ToString());
             entity = new BBDFund(budget,FinancialYearStart, UniversityID);
+            entity.FundID = FundID;
 
 
             return entity;

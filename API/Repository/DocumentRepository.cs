@@ -51,14 +51,15 @@ namespace API.Repository
 
         public Document GetById(int id)
         {
-            Document entity;
             string query = $"SELECT * FROM Document WHERE DocumentID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
             String Transcript = (row["Transcript"].ToString());
             String IdenetityDocument = (row)["IdentityDocument"].ToString();
             int ApplicationID = Convert.ToInt32(row["ApplicationID"]); ;
-            return new Document(Transcript, IdenetityDocument, ApplicationID);
+            Document entity = new Document(Transcript, IdenetityDocument, ApplicationID);
+            entity.DocumentID = id;
+            return entity;
 
         }
 

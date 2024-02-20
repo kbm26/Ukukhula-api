@@ -57,12 +57,14 @@ namespace API.Repository
             DataRow row = GetDataTable(query).Rows[0];
             int ApplicationID = int.Parse(row["ApplicationID"].ToString());
             int Grade = int.Parse(row["Grade"].ToString());
-            int Amount = int.Parse(row["Amount"].ToString());
+            decimal Amount = decimal.Parse(row["Amount"].ToString());
             string Comment = (row["Comment"].ToString());
             int StatusID = int.Parse(row["StatusID"].ToString());
             int StudentID = int.Parse(row["StudentID"].ToString());
             int Year = int.Parse(row["Year"].ToString());
+            
             entity = new StudentApplication(Grade, Amount, Comment, StatusID, StudentID, Year);
+            entity.ApplicationID = id;
 
             return entity;
         }
