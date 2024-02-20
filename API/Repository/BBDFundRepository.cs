@@ -11,15 +11,21 @@ namespace API.Repository
 
         public void Add(BBDFund entity)
         {
-            string query = "INSERT INTO BBDFund " +
-                "([Budget], [FinancialYearStart], [UniversityID]) " +
-                $"VALUES (@Budget, @FinancialYearStart, @UniversityID) ";
+            string query = @"UPDATE BBDFund
+                     SET Budget = @Budget,
+                         FinancialYearStart = @FinancialYearStart,
+                         UniversityID = @UniversityID
+                     WHERE FundID = @FundID";
+
 
 
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@Budget", entity.Budget);
-            command.Parameters.AddWithValue("@FinancialYearStart", entity.UniversityID);
-            command.Parameters.AddWithValue("@UniveersityID", entity.UniversityID);
+            command.Parameters.AddWithValue(" @FinancialYearStart", entity.FinancialYearStart);
+            command.Parameters.AddWithValue("@UniversityID", entity.UniversityID);
+            command.Parameters.AddWithValue("@FundID", entity.FundID);
+
+           
             command.ExecuteNonQuery();
             
         }
@@ -74,7 +80,7 @@ namespace API.Repository
             command.Parameters.AddWithValue("@Budget", newEntity.Budget);
             command.Parameters.AddWithValue("@FinancialYearStart", newEntity.FinancialYearStart);
             command.Parameters.AddWithValue("@UniversityID", newEntity.UniversityID);
-            command.Parameters.AddWithValue("@FundID", newEntity.FundID); 
+            command.Parameters.AddWithValue("@FundID", newEntity.FundID); // Adding FundID parameter
 
             command.ExecuteNonQuery();
         }
