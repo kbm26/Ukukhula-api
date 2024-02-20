@@ -17,18 +17,16 @@ namespace API.Repository
 
         public void Add(ContactDetails entity)
         {
-            string query = "INSERT INTO ContactDetails" +
-                "SET Email = @Email, " +
-                    "PhoneNumber = @PhoneNumner, " +
-                "WHERE ContactID = @ContactID ";
+            string query = "INSERT INTO ContactDetails " +
+                "([Email], [PhoneNumber]) " +
+                $"VALUES (@Email, @PhoneNumber) ";
 
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
+
                 command.Parameters.AddWithValue("@Email", entity.Email);
                 command.Parameters.AddWithValue("@PhoneNumber", entity.PhoneNumber);
-                command.Parameters.AddWithValue("@ContactID", entity.ContactID);
-
                 command.ExecuteNonQuery();
             }
         }
@@ -38,11 +36,10 @@ namespace API.Repository
             string query = $"SELECT * FROM ContactDetails";
 
             foreach (DataRow row in GetDataTable(query).Rows)
-            {
-                int ContactID = int.Parse(row["ContactID"].ToString()); 
+            { 
                 string Email = (row["Email"].ToString());
-                int PhoneNumber = int.Parse(row["PhoneNumber"].ToString());    
-                ContactDetails contactDetails = new ContactDetails(ContactID, Email, PhoneNumber);
+                string PhoneNumber = (row["PhoneNumber"].ToString());    
+                ContactDetails contactDetails = new ContactDetails(Email, PhoneNumber);
                 contactDetails.ContactID = int.Parse(row["ContactID"].ToString());
                 yield return contactDetails;
             }
@@ -53,10 +50,9 @@ namespace API.Repository
             string query = $"SELECT * FROM University WHERE ContactID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
-            int ContactID = int.Parse(row["ContactID"].ToString());
             string Email = (row["Email"].ToString());
-            int PhoneNumber = int.Parse(row["PhoneNumber"].ToString());
-            return new ContactDetails(ContactID, Email, PhoneNumber);
+            string PhoneNumber = (row["PhoneNumber"].ToString());
+            return new ContactDetails(Email, PhoneNumber);
         }
 
         public void Update(ContactDetails newEntity)

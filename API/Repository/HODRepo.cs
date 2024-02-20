@@ -19,17 +19,13 @@ namespace API.Repositories
         public void Add(HOD headOfDepartment)
         {
             string query = "INSERT INTO HOD " +
-                "SET UserID = @UserID, " +
-                "WHERE UniversityID = @UniversityID";
-
-
+                "([UserID], [UniversityID]) " +
+                $"VALUES (@UserID, @UniversityID) ";
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-
                 command.Parameters.AddWithValue("@UserID", headOfDepartment.UserID);
                 command.Parameters.AddWithValue("@UniversityID", headOfDepartment.UniversityID);
-
                 command.ExecuteNonQuery();
 
             }
@@ -41,9 +37,9 @@ namespace API.Repositories
 
             foreach (DataRow row in GetDataTable(query).Rows)
             {
-                int UniversityID = int.Parse(row["UniversityID"].ToString());
                 int UserID = int.Parse(row["UserID"].ToString());
-                HOD hod = new HOD(UniversityID, UserID);
+                int UniversityID = int.Parse(row["UniversityID"].ToString());  
+                HOD hod = new HOD(UserID, UniversityID);
                 hod.UniversityID = int.Parse(row["UniversityID"].ToString());
                 yield return hod;
             }
@@ -54,9 +50,9 @@ namespace API.Repositories
             string query = $"SELECT * FROM HOD WHERE UserID = @UserID";
 
             DataRow row = GetDataTable(query).Rows[0];
-            int UniversityID = (int)row["UniversityID"];
             int UserID = (int)row["UserID"];
-            return new HOD(UniversityID, UserID);
+            int UniversityID = int.Parse(row["UniversityID"].ToString());
+            return new HOD(UserID, UniversityID);
         }
 
         public void Update(HOD newEntity)
