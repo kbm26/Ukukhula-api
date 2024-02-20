@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using API.Model;
 using API.Repository;
 
-namespace API.Repository
+namespace API.Repositories
 {
     public class HODRepository : IRepository<HOD>
     {
@@ -15,12 +16,12 @@ namespace API.Repository
             this.connection = connection;
         }
 
-        public void Add(HOD hod)
+        public void Add(HOD headOfDepartment)
         {
-            string query = "INSERT INTO HODs (UniversityID) VALUES (@UniversityID)";
+            string query = "INSERT INTO HOD (UniversityID) VALUES (@UniversityID)";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@UniversityID", hod.UniversityID);
+                command.Parameters.AddWithValue("@UniversityID", headOfDepartment.UniversityID);
                 command.ExecuteNonQuery();
             }
         }
@@ -28,55 +29,61 @@ namespace API.Repository
         public IEnumerable<HOD> GetAll()
         {
             List<HOD> hods = new List<HOD>();
-            string query = "SELECT * FROM HODs";
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    foreach (var row in reader)
-                    {
-                        HOD hod = new HOD((int)reader["UserID"], (int)reader["UniversityID"]);
 
-                        hods.Add(hod);
-                    }
+            string query = "SELECT * FROM HOD";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                foreach (DataRow row in GetDataTable(query).Rows)
+                {
+                    int UserID = (int)row["UserID"];
+
+                    int UniversityID = (int)row["UniversityID"];
+
+                    hods.Add(new HOD( UserID, UniversityID));
                 }
             }
+
             return hods;
         }
 
         public HOD GetById(int id)
         {
-            string query = "SELECT * FROM HODs WHERE UserID = @UserID";
-            HOD hod = new HOD(0,0); //PLEASE FIX THIS ASAP
+            string query = $"SELECT * FROM HOD WHERE UserID = @UserID";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@UserID", id);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    foreach (var row in reader)
-                    {
-                        if (reader.Read())
-                        {
-                            hod = new HOD((int)reader["UserID"], (int)reader["UniversityID"]);
-                        }
-                    }
-                }
-            }
-
-            return hod;
+            DataRow row = GetDataTable(query).Rows[0];
+            int UserID = (int)row["UserID"];
+            int UniversityID = (int)row["UniversityID"];
+         
+            return new HOD(UserID, UniversityID);
         }
 
         public void Update(HOD entity)
         {
-            string query = "UPDATE HODs SET UniversityID = @UniversityID WHERE UserID = @UserID";
+            string query = "UPDATE HOD SET UniversityID = @UniversityID WHERE UserID = @UserID";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@UniversityID", entity.UniversityID);
                 command.Parameters.AddWithValue("@UserID", entity.UserID);
                 command.ExecuteNonQuery();
             }
+        }
+
+        private DataTable GetDataTable(string query)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                {
+                    adapter.Fill(dataTable);
+                }
+            }
+
+            return dataTable;
         }
     }
 }

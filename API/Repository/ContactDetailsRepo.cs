@@ -40,11 +40,11 @@ namespace API.Repository
                 {
                     foreach (DataRow row in GetDataTable(query).Rows)
                     {
-                        int id = (int)row["ContactID"];
-                        string email = row["Email"].ToString();
+                        int contactId = (int)row["ContactID"];
+                        string email = row["email"].ToString();
                         int phoneNumber = (int)row["PhoneNumber"];
 
-                        contactDetailsList.Add(new ContactDetails(id, email, phoneNumber));
+                        contactDetailsList.Add(new ContactDetails(contactId, email, phoneNumber));
                     }
                 }
             }
@@ -54,26 +54,15 @@ namespace API.Repository
 
         public ContactDetails GetById(int id)
         {
-            string query = "SELECT * FROM ContactDetails WHERE ContactID = @ContactID";
-            ContactDetails contactDetails = null;
+            string query = $"SELECT * FROM ContactDetails WHERE ContactID = @ContactID";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@ContactID", id);
+            DataRow row = GetDataTable(query).Rows[0];
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        string email = reader["Email"].ToString();
-                        int phoneNumber = (int)reader["PhoneNumber"];
+            int contactId = (int)row["contactId"];
+            string email = row["email"].ToString();
+            int phoneNumber = (int)row["phoneNumber"];
 
-                        contactDetails = new ContactDetails(id, email, phoneNumber);
-                    }
-                }
-            }
-
-            return contactDetails;
+            return new ContactDetails(contactId, email, phoneNumber);
         }
 
         public void Update(ContactDetails newEntity)
