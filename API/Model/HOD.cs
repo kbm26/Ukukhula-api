@@ -2,20 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Model
 {
-    public class HOD
+    public class HOD(int UserID, int UniversityID)
     {
 
-        public HOD(int userId, int universityId)
-        {
-            UserID = userId;
-            UniversityID = universityId;
-        }
 
         [Key]
-        public int UserID { get; set; }
+        public int UserID { get; set; } = UserID;
 
         [Required]
-        public int UniversityID { get; set; }
+        public int UniversityID { get; set; } = UniversityID;
     }
 }
 

@@ -17,13 +17,17 @@ namespace API.Repository
 
         public void Add(ContactDetails entity)
         {
-            string query = "INSERT INTO ContactDetails (Email, PhoneNumber) " +
-                           "VALUES (@Email, @PhoneNumber)";
+            string query = "INSERT INTO ContactDetails" +
+                "SET Email = @Email, " +
+                    "PhoneNumber = @PhoneNumner, " +
+                "WHERE ContactID = @ContactID ";
+
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@Email", entity.Email);
                 command.Parameters.AddWithValue("@PhoneNumber", entity.PhoneNumber);
+                command.Parameters.AddWithValue("@ContactID", entity.ContactID);
 
                 command.ExecuteNonQuery();
             }
@@ -31,82 +35,55 @@ namespace API.Repository
 
         public IEnumerable<ContactDetails> GetAll()
         {
-            List<ContactDetails> contactDetailsList = new List<ContactDetails>();
-            string query = "SELECT * FROM ContactDetails";
+            string query = $"SELECT * FROM ContactDetails";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
+            foreach (DataRow row in GetDataTable(query).Rows)
             {
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    foreach (DataRow row in GetDataTable(query).Rows)
-                    {
-                        int id = (int)row["ContactID"];
-                        string email = row["Email"].ToString();
-                        int phoneNumber = (int)row["PhoneNumber"];
-
-                        contactDetailsList.Add(new ContactDetails(id, email, phoneNumber));
-                    }
-                }
+                int ContactID = int.Parse(row["ContactID"].ToString()); 
+                string Email = (row["Email"].ToString());
+                int PhoneNumber = int.Parse(row["PhoneNumber"].ToString());    
+                ContactDetails contactDetails = new ContactDetails(ContactID, Email, PhoneNumber);
+                contactDetails.ContactID = int.Parse(row["ContactID"].ToString());
+                yield return contactDetails;
             }
-
-            return contactDetailsList;
         }
 
         public ContactDetails GetById(int id)
         {
-            string query = "SELECT * FROM ContactDetails WHERE ContactID = @ContactID";
-            ContactDetails contactDetails = null;
+            string query = $"SELECT * FROM University WHERE ContactID = {id}";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@ContactID", id);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        string email = reader["Email"].ToString();
-                        int phoneNumber = (int)reader["PhoneNumber"];
-
-                        contactDetails = new ContactDetails(id, email, phoneNumber);
-                    }
-                }
-            }
-
-            return contactDetails;
+            DataRow row = GetDataTable(query).Rows[0];
+            int ContactID = int.Parse(row["ContactID"].ToString());
+            string Email = (row["Email"].ToString());
+            int PhoneNumber = int.Parse(row["PhoneNumber"].ToString());
+            return new ContactDetails(ContactID, Email, PhoneNumber);
         }
 
         public void Update(ContactDetails newEntity)
         {
-            string query = "UPDATE ContactDetails SET " +
-                           "Email = @Email, " +
-                           "PhoneNumber = @PhoneNumber " +
-                           "WHERE ContactID = @ContactID";
+            string query = @"UPDATE ContactDetails "+
+                    "SET Email = @Email, " +
+                        "PhoneNumber = @PhoneNumber, " +
+                    "WHERE ContactID = @ContactID";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@Email", newEntity.Email);
-                command.Parameters.AddWithValue("@PhoneNumber", newEntity.PhoneNumber);
-                command.Parameters.AddWithValue("@ContactID", newEntity.ContactID);
+            SqlCommand command = new SqlCommand(query, connection);
 
-                command.ExecuteNonQuery();
-            }
+            
+            command.Parameters.AddWithValue("@Email", newEntity.Email);
+            command.Parameters.AddWithValue("@PhoneNumber", newEntity.PhoneNumber);
+            command.Parameters.AddWithValue("@ContactID", newEntity.ContactID);
+            command.ExecuteNonQuery();
         }
 
 
-        private DataTable GetDataTable(string query)
+        public DataTable GetDataTable(string query)
         {
             DataTable dataTable = new DataTable();
-
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                {
-                    adapter.Fill(dataTable);
-                }
-            }
-
+            SqlCommand command = new SqlCommand(query, connection);
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(dataTable);
             return dataTable;
         }
     }
 }
+    

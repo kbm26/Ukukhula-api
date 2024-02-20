@@ -4,6 +4,7 @@ using API.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
+using API.Repositories;
 
 
 namespace API.Controllers
@@ -31,17 +32,8 @@ namespace API.Controllers
                 IEnumerable < University >  unis = new UniversityRepository(connString).GetAll();
                 IEnumerable<UniversityFundApplication> unifunds = new UniversityFundApplicationRepository(connString).GetAll();
 
-                var query = from University in unis
-                            join Unifund in unifunds on University.UniversityID equals Unifund.UniversityID
-                            where University.Name == "University of Cape Town"
-                            where Unifund.FundingYear.Date.Year == 2020
-                            select new
-                            {
-                                name = University.Name,
-                                budget = Unifund.Amount,
-                                year = Unifund.FundingYear.Date.Year
-                            };
-                return Json(query);
+                new BBDFundRepository(connString).Add(new BBDFund(1, DateTime.Now, 3));
+                return Json("Work");
 
             }
             catch (Exception ef)

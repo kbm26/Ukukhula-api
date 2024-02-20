@@ -8,11 +8,13 @@ namespace API.Repository
     {
         public void Add(UniversityStudentInformation entity)
         {
-            string query = "INSERT INTO UniversityStudentInformation " +
-            "([UniversityID],[StudentID]) " +
-            $"VALUES ({entity.UniversityID},  {entity.StudentID}) ";
+            string query = "INSERT INTO UniversityFundApplication " +
+                "SET StudentID = @StudentID," +
+                "WHERE UniverstyID = @UniverstyID";
 
             SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@StudentID", entity.StudentID);
+            command.Parameters.AddWithValue("@UniversityID", entity.UniversityID);
             command.ExecuteNonQuery();
         }
 
@@ -22,9 +24,12 @@ namespace API.Repository
 
             foreach (DataRow row in GetDataTable(query).Rows)
             {
+
                 int UniversityID = int.Parse(row["UniversityID"].ToString());
                 int StudentID = int.Parse(row["StudentID"].ToString());
-                yield return new UniversityStudentInformation(StudentID,UniversityID);
+                UniversityStudentInformation universityStudentInformation = new UniversityStudentInformation(UniversityID, StudentID);
+                universityStudentInformation.UniversityID = int.Parse(row["UniversityID"].ToString());
+                yield return universityStudentInformation;
             }
         }
 
@@ -35,17 +40,21 @@ namespace API.Repository
             DataRow row = GetDataTable(query).Rows[0];
             int UniversityID = int.Parse(row["UniversityID"].ToString());
             int StudentID = int.Parse(row["StudentID"].ToString());
-            return new UniversityStudentInformation(StudentID, UniversityID);
+            return new UniversityStudentInformation(UniversityID, StudentID);
         }
 
         public void Update(UniversityStudentInformation newEntity)
         {
-            int StudentID = newEntity.StudentID;
-
-            string query = $"UPDATE UniversityStudentInformation SET UniversityID = {newEntity.UniversityID} " +
-                $"WHERE StudentID = {StudentID} ";
+            string query = @"UPDATE UniversityStudentInformation" +
+                    "SET StudentID = @StudentID, " +
+                        
+                    "WHERE UniversityID = @UniversityID";
 
             SqlCommand command = new SqlCommand(query, connection);
+
+            
+            command.Parameters.AddWithValue("@StudentID", newEntity.StudentID);
+            command.Parameters.AddWithValue("@UniversitID", newEntity.UniversityID);
             command.ExecuteNonQuery();
         }
 

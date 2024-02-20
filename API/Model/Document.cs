@@ -2,16 +2,17 @@
 
 namespace API.Model
 {
-    public class Document(string Transcript, string IdentityDocument, int ApplicationID)
+    public class Document(int DocumentID, string Transcript, string IdentityDocument, int ApplicationID)
     {
         [Key]
-        public int DocumentID;
+        public int DocumentID { get; set; } = DocumentID;
         [Required]
-        public String Transcript { get; set; }
+        public String Transcript { get; set; } = Transcript;
         [Required]
-        public String IdentityDocument { get; set; }
+
+        public String IdentityDocument { get; set; } = IdentityDocument;
         [Required]
-        public int ApplicationID { get; set; }
+        public int ApplicationID { get; set; } = ApplicationID;
 
     }
 }

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Xml.Linq;
 using API.Model;
 
 namespace API.Repository
@@ -16,8 +20,12 @@ namespace API.Repository
 
         public void Add(User user)
         {
-            string query = "INSERT INTO Users (FirstName, LastName, ContactID, RoleID) " +
-                           "VALUES (@FirstName, @LastName, @ContactID, @RoleID)";
+            string query = "INSERT INTO User" +
+                "SET FirstName = @FirstName," +
+                    "LastName = @LastName," +
+                    "ContactID = @ContactID," +
+                    "RoleID = @RoleID," +
+                "WHERE UserID = @UserID";
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -32,80 +40,63 @@ namespace API.Repository
 
         public IEnumerable<User> GetAll()
         {
-            List<User> users = new List<User>();
+            string query = "SELECT * FROM [dbo].[User];";
 
-            string query = "SELECT * FROM Users";
-
-            using (SqlCommand command = new SqlCommand(query, connection))
+            foreach (DataRow row in GetDataTable(query).Rows)
             {
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        User user = new()
-                        {
-                            UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            ContactID = reader.GetInt32(reader.GetOrdinal("ContactID")),
-                            RoleID = reader.GetInt32(reader.GetOrdinal("RoleID"))
-                        };
-
-                        users.Add(user);
-                    }
-                }
+                int UserID = (int)row["UserID"];
+                string FirstName = row["FirstName"].ToString();
+                string LastName = row["LastName"].ToString();
+                int ContactID = (int)row["ContactID"];
+                int RoleID = (int)row["RoleID"];
+                User user = new User(UserID, FirstName, LastName, ContactID, RoleID);
+                user.UserID = (int)row["UserID"];
+                yield return user;
             }
+        }
+        public User GetById(int id)
+        {
+            string query = $"SELECT * FROM User WHERE UserID = {id}";
 
-            return users;
+            DataRow row = GetDataTable(query).Rows[0];
+            int UserID = (int)row["UserID"];
+            string FirstName = row["FirstName"].ToString();
+            string LastName = row["LastName"].ToString();
+            int ContactID = (int) row["ContactID"];
+            int RoleID = (int) row["RoleID"];
+            return new User(UserID, FirstName, LastName, ContactID, RoleID);
         }
 
-        public User GetById(int userId)
+        public void Update(User newEntity)
         {
-            User user = null;
+            string query = @"UPDATE User" + 
+                    "SET FirstName = @FirstName, " + 
+                        "LastName = @LastName, " + 
+                        "ContactID = @ContactID, " + 
+                        "RoleID = @RoleID " +
+                    "WHERE UserID = @UserID";
 
-            string query = "SELECT * FROM Users WHERE UserID = @UserID";
+            SqlCommand command = new SqlCommand(query, connection);
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@UserID", userId);
+            
+            command.Parameters.AddWithValue("@FirstName", newEntity.FirstName);
+            command.Parameters.AddWithValue("@LastName", newEntity.LastName);
+            command.Parameters.AddWithValue("@ContactID", newEntity.ContactID);
+            command.Parameters.AddWithValue("@RoleID", newEntity.RoleID);
+            command.Parameters.AddWithValue("@UserID", newEntity.UserID);
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        user = new User
-                        {
-                            UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            ContactID = reader.GetInt32(reader.GetOrdinal("ContactID")),
-                            RoleID = reader.GetInt32(reader.GetOrdinal("RoleID"))
-                        };
-                    }
-                }
-            }
-
-            return user;
+            command.ExecuteNonQuery();
         }
 
-        public void Update(User user)
+        public DataTable GetDataTable(string query)
         {
-            string query = "UPDATE Users SET FirstName = @FirstName, " +
-                           "LastName = @LastName, " +
-                           "ContactID = @ContactID, " +
-                           "RoleID = @RoleID " +
-                           "WHERE UserID = @UserID";
-
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@FirstName", user.FirstName);
-                command.Parameters.AddWithValue("@LastName", user.LastName);
-                command.Parameters.AddWithValue("@ContactID", user.ContactID);
-                command.Parameters.AddWithValue("@RoleID", user.RoleID);
-                command.Parameters.AddWithValue("@UserID", user.UserID);
-
-                command.ExecuteNonQuery();
-            }
+            DataTable dataTable = new DataTable();
+            SqlCommand command = new SqlCommand(query, connection);
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(dataTable);
+            return dataTable;
         }
     }
 }
+
+

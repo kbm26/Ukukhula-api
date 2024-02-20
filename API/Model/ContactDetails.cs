@@ -2,23 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Model
 {
-    public class ContactDetails
+    public class ContactDetails(int ContactID, string Email, int PhoneNumber)
     {
-
-        public ContactDetails(int contactId, string email, int phoneNumber)
-        {
-            ContactID = contactId;
-            Email = email;
-            PhoneNumber = phoneNumber;
-        }
-
         [Key]
-        public int ContactID { get; set; }
-
+        public int ContactID { get; set; } = ContactID;
         [Required]
-        public string Email { get; set; }
-
+        public string Email { get; set; } = Email;
         [Required]
-        public int PhoneNumber { get; set; }
+        public int PhoneNumber { get; set; } = PhoneNumber;
     }
 }
