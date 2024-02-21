@@ -37,6 +37,7 @@ namespace API.Service
 
         }
 
+
         public object approveUniversityApplication(ApplicationApprovalDTO applicationDTO)
         {
 
@@ -182,6 +183,46 @@ namespace API.Service
                     comment = applicant.Comment,
                     status = status(applicant.StatusID)
                 };
+
+
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    message = "Failed to create university fund application",
+
+                };
+            }
+        }
+
+        public object GetAllUniversityFundApplication() {
+
+            try
+            {
+
+                IEnumerable<UniversityFundApplication> applicantions = new UniversityFundApplicationRepository(connection).GetAll();
+                IEnumerable<University> universities = new UniversityRepository(connection).GetAll();
+                /*
+                                     name = university.Name,
+                    year = applicant.FundingYear.Year,
+                    amount = applicant.Amount,
+                    comment = applicant.Comment,
+                    status = status(applicant.StatusID)
+                 */
+                return from university in universities
+                       join application in applicantions on university.UniversityID equals application.UniversityID
+                       select new 
+                       {
+                           name = university.Name,
+                           year = application.FundingYear.Year,
+                           amount = application.Amount,
+                           comment = application.Comment,
+                           status = status(application.StatusID)
+
+
+
+                       };
 
 
             }

@@ -26,59 +26,41 @@ namespace API.Controllers
 
 
         [HttpPost(Name = "CreateUniversity")]
-        public JsonResult CreateUniversity(UniversityDTO universityDTO)
+        public ActionResult CreateUniversity(UniversityDTO universityDTO)
         {
             if (!ModelState.IsValid)
             {
-                return Json("Bad request");
+                return BadRequest("Bad request");
             }
             try
             {
-                return Json(new UniversityService(connection).CreateUniversity(universityDTO));
+                return Ok(new UniversityService(connection).CreateUniversity(universityDTO));
 
             }
             catch (Exception ef)
             {
-                return Json(ef.Message);
+                return StatusCode(500,ef.Message);
             }
         }
 
         [HttpPost(Name = "CreateUniversityFundApplication")]
-        public JsonResult CreateUniversityFundApplication(UniversityApplicationDTO universityDTO)
+        public ActionResult CreateUniversityFundApplication(UniversityApplicationDTO universityDTO)
         {
             if (!ModelState.IsValid)
             {
-                return Json("Bad request");
+                return BadRequest("Bad request");
             }
             try
             {
-                return Json(new UniversityService(connection).CreateUniversityFundApplication(universityDTO));
+                return Ok(new UniversityService(connection).CreateUniversityFundApplication(universityDTO));
 
             }
             catch (Exception ef)
             {
-                return Json(ef.Message);
+                return StatusCode(500,ef.Message);
             }
         }
 
-        [HttpGet(Name = "GetAllUniversities")]
-        public JsonResult GetAllUniversities() {
-
-            if (!ModelState.IsValid)
-            {
-                return Json("Bad request");
-            }
-            try
-            {
-                return Json(new UniversityService(connection).getAllUniversities());
-
-            }
-            catch (Exception ef)
-            {
-                return Json(ef.Message);
-            }
-
-        }
 
 
 

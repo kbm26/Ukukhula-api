@@ -116,7 +116,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost(Name = "GetUniversityFundApplication/{id}")]
+        [HttpGet(Name = "GetUniversityFundApplicationByID/{id}")]
 
         public JsonResult GetUniversityFundApplication(int id)
         {
@@ -134,6 +134,47 @@ namespace API.Controllers
             {
                 return Json(error.Message);
             }
+        }
+
+        [HttpGet(Name = "GetAllUniversityFundApplication")]
+
+        public JsonResult GetAllUniversityFundApplication()
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new BBDService(connection).GetAllUniversityFundApplication());
+
+            }
+            catch (Exception error)
+            {
+                return Json(error.Message);
+            }
+        }
+
+
+        [HttpGet(Name = "GetAllUniversities")]
+        public JsonResult GetAllUniversities()
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new UniversityService(connection).getAllUniversities());
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+
         }
 
     }
