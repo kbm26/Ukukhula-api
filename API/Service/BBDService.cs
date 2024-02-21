@@ -208,6 +208,7 @@ namespace API.Service
                        join application in applicantions on university.UniversityID equals application.UniversityID
                        select new 
                        {
+                           id = application.ApplicationID,
                            name = university.Name,
                            year = application.FundingYear.Year,
                            amount = application.Amount,
