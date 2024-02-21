@@ -91,6 +91,24 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet(Name = "GetAllStudentApplication")]
+        public JsonResult GetAllStudentApplication()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new HODService(connection).getAllStudentApplication());
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+        }
+
 
 
 

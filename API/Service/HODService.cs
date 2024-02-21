@@ -3,6 +3,7 @@ using API.Repository;
 using API.Service.DTOs;
 
 using System.Data.SqlClient;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace API.Service
 {
@@ -110,6 +111,42 @@ namespace API.Service
                     amount = applicant.Amount,
                     comment = applicant.Comment,
                     status = status(applicant.StatusID)
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    message = "Failed to get student application",
+                    error = ex
+
+                };
+            }
+        }
+
+        public object getAllStudentApplication()
+        {
+
+            try
+            {
+
+                IEnumerable<StudentApplication> applicantions = new StudentApplicationRepository(connection).GetAll();
+                IEnumerable<StudentInformation> studentInformation = new StudentInformationRepository(connection).GetAll();
+                IEnumerable<User> userInformation = new UserRepository(connection).GetAll();
+                return from studentinfo in studentInformation
+                       join application in applicantions on studentinfo.StudentID equals application.StudentID
+                       join userinfo in userInformation on studentinfo.UserID equals userinfo.UserID
+                       select new
+
+                        {
+                    name = userinfo.FirstName,
+                    surname = userinfo.LastName,
+                    grade = application.Grade,
+                    year = application.Year,
+                    amount = application.Amount,
+                    comment = application.Comment,
+                    status = status(application.StatusID)
                 };
 
             }

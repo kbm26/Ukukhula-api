@@ -203,13 +203,7 @@ namespace API.Service
 
                 IEnumerable<UniversityFundApplication> applicantions = new UniversityFundApplicationRepository(connection).GetAll();
                 IEnumerable<University> universities = new UniversityRepository(connection).GetAll();
-                /*
-                                     name = university.Name,
-                    year = applicant.FundingYear.Year,
-                    amount = applicant.Amount,
-                    comment = applicant.Comment,
-                    status = status(applicant.StatusID)
-                 */
+
                 return from university in universities
                        join application in applicantions on university.UniversityID equals application.UniversityID
                        select new 
