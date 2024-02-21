@@ -15,11 +15,16 @@ namespace API.Repository
         }
         public void Add(StudentInformation entity)
         {
-            String query = "INSERT INTO StudentInformation" +
-                "([IDNumber], [Birhtdate], [Age], [Gender], [UserID], [RaceID])" +
-                $"VALUES ({entity.IDNumber}, '{entity.BirthDate}', {entity.Age}, {entity.Gender} {entity.UserID}, {entity.RaceID})";
+            String query = @"INSERT INTO StudentInformation (IDNumber, BirthDate, Gender, UserID, RaceID)
+                            VALUES (@IDNumber, @BirthDate, @Gender, @UserID, @RaceID)";
 
             SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@IDNumber", entity.IDNumber);
+            command.Parameters.AddWithValue("@BirthDate", entity.BirthDate);
+            command.Parameters.AddWithValue("@Gender", entity.Gender);
+            command.Parameters.AddWithValue("@UserID", entity.UserID);
+            command.Parameters.AddWithValue("@RaceID", entity.RaceID);
+
             command.ExecuteNonQuery();
 
         }
@@ -30,30 +35,36 @@ namespace API.Repository
 
             foreach (DataRow row in GetDataTable(query).Rows)
             {
-                string IDNumber = row["IDNumber"].ToString();
-                DateTime BirhtDate = DateTime.Parse(row["BirthDate"].ToString());
+                int StudentID = int.Parse(row["StudentID"].ToString());
+                string IDNumber = (row["IDNumber"].ToString());
+                DateTime BirthDate = DateTime.Parse(row["BirthDate"].ToString());
                 int Age = int.Parse(row["Age"].ToString());
-                string Gender = row["Gender"].ToString();
+                string Gender = (row["Gender"].ToString());
                 int UserID = int.Parse(row["UserID"].ToString());
                 int RaceID = int.Parse(row["RaceID"].ToString());
-                yield return new StudentInformation(IDNumber, BirhtDate, Age, Gender, UserID, RaceID);
+                StudentInformation studentinformation = new StudentInformation( IDNumber, BirthDate, Gender, UserID, RaceID);
+                studentinformation.Age = Age;
+                studentinformation.StudentID = int.Parse(row["StudentID"].ToString());
+                yield return studentinformation;
             }
         }
 
         public StudentInformation GetById(int id)
         {
             StudentInformation entity;
-            string query = $"SELECT * FROM StudentInformation WHERE StudnentID = {id}";
+            string query = $"SELECT * FROM StudentInformation WHERE StudentID = {id}";
 
             DataRow row = GetDataTable(query).Rows[0];
-            string IDNumber = row["IDNumber"].ToString();
-            DateTime BirhtDate = DateTime.Parse(row["BirthhDate"].ToString());
+            int StudentID = int.Parse(row["StudentID"].ToString());
+            string IDNumber =(row["IDNumber"].ToString());
+            DateTime BirhtDate = DateTime.Parse(row["BirthDate"].ToString());
             int Age = int.Parse(row["Age"].ToString());
-            string Gender = row["Gender"].ToString();
+            string Gender = (row["Gender"].ToString());
             int UserID = int.Parse(row["UserID"].ToString());
             int RaceID = int.Parse(row["RaceID"].ToString());
-            entity = new StudentInformation(IDNumber, BirhtDate, Age, Gender, UserID, RaceID);
-
+            entity = new StudentInformation( IDNumber, BirhtDate,  Gender, UserID, RaceID);
+            entity.Age = Age;
+            entity.StudentID = StudentID;
 
             return entity;
 
@@ -61,18 +72,20 @@ namespace API.Repository
 
         public void Update(StudentInformation newEntity)
         {
-            int entityID = newEntity.StudentID;
-
-            StudentInformation oldEntity = GetById(entityID);
-            String query = $"UPDATE StudentInformation SET IDNumber = {newEntity.IDNumber} " +
-                $"BirthDate = {newEntity.BirthDate}" +
-                $"Age = {newEntity.Age} " +
-                $"Gender = {newEntity.Gender} " +
-                $"UserID = {newEntity.UserID} " +
-                $"RaceID = {newEntity.RaceID}" +
-                $"WHERE StudentID = {entityID} ";
+            string query = @"UPDATE StudentInformation 
+                        SET IDNumber = @IDNumber, 
+                        BirthDate = @BirthDate,     
+                        Gender = @Gender, UserID = @UserID, RaceID = @RaceID WHERE StudentID = @StudentID";
 
             SqlCommand command = new SqlCommand(query, connection);
+
+            
+            command.Parameters.AddWithValue("@IdNumber", newEntity.IDNumber);
+            command.Parameters.AddWithValue("@Birthdate", newEntity.BirthDate);
+            command.Parameters.AddWithValue("@Gender", newEntity.Gender);
+            command.Parameters.AddWithValue("@UserID", newEntity.UserID);
+            command.Parameters.AddWithValue("@RaceID", newEntity.RaceID);
+            command.Parameters.AddWithValue("@StudentID", newEntity.StudentID);
             command.ExecuteNonQuery();
         }
 

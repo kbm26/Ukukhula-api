@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpPost(Name = "PostStudentFundApproval")]
-        public JsonResult PostStudentFundApproval(ApplicationDTO studentApplication)
+        public JsonResult PostStudentFundApproval(ApplicationApprovalDTO studentApplication)
         {
             if (!ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpPost(Name = "PostUniversityFundApproval")]
-        public JsonResult PostUniversityFundApproval(UniversityFundApplicationDTO universityFundApplication)
+        public JsonResult PostUniversityFundApproval(ApplicationApprovalDTO universityFundApplication)
         {
             if (!ModelState.IsValid)
             {
@@ -64,12 +64,12 @@ namespace API.Controllers
             {
                 return Json("Bad request");
             }
-            UniversityDTO universityDTO = new UniversityDTO();
-            universityDTO.year = year;
-            universityDTO.Name = name;
+            AnnualExpenditure AnnualExpenditureyDTO = new AnnualExpenditure();
+            AnnualExpenditureyDTO.year = year;
+            AnnualExpenditureyDTO.Name = name;
             try
             {
-                return Json(new BBDService(connection).getAnnualExpenditure(universityDTO));
+                return Json(new BBDService(connection).getAnnualExpenditure(AnnualExpenditureyDTO));
             }
             catch (Exception error)
             {
@@ -116,6 +116,66 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet(Name = "GetUniversityFundApplicationByID/{id}")]
+
+        public JsonResult GetUniversityFundApplication(int id)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new BBDService(connection).GetUniversityFundApplication(id));
+
+            }
+            catch (Exception error)
+            {
+                return Json(error.Message);
+            }
+        }
+
+        [HttpGet(Name = "GetAllUniversityFundApplication")]
+
+        public JsonResult GetAllUniversityFundApplication()
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new BBDService(connection).GetAllUniversityFundApplication());
+
+            }
+            catch (Exception error)
+            {
+                return Json(error.Message);
+            }
+        }
+
+
+        [HttpGet(Name = "GetAllUniversities")]
+        public JsonResult GetAllUniversities()
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return Json("Bad request");
+            }
+            try
+            {
+                return Json(new UniversityService(connection).getAllUniversities());
+
+            }
+            catch (Exception ef)
+            {
+                return Json(ef.Message);
+            }
+
+        }
 
     }
 

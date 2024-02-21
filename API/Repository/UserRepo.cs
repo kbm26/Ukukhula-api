@@ -1,5 +1,10 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Xml.Linq;
 using API.Model;
 
 namespace API.Repository
@@ -15,8 +20,9 @@ namespace API.Repository
 
         public void Add(User user)
         {
-            string query = "INSERT INTO Users (FirstName, LastName, ContactID, RoleID) " +
-                           "VALUES (@FirstName, @LastName, @ContactID, @RoleID)";
+            string query = "INSERT INTO [dbo].[User] (FirstName, LastName, ContactID, RoleID)" +
+                "VALUES (@FirstName, @LastName, @ContactID, @RoleID)";
+
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -31,52 +37,51 @@ namespace API.Repository
 
         public IEnumerable<User> GetAll()
         {
-            string query = "SELECT * FROM Users";
+            string query = "SELECT * FROM [dbo].[User];";
 
             foreach (DataRow row in GetDataTable(query).Rows)
             {
-                int UserID = int.Parse(row["UserID"].ToString());
-                int RoleID = int.Parse(row["RoleID"].ToString());
-                int ContactID = int.Parse(row["ContactID"].ToString());
+                int UserID = (int)row["UserID"];
                 string FirstName = row["FirstName"].ToString();
                 string LastName = row["LastName"].ToString();
-                User user = new User(FirstName, LastName, ContactID, RoleID);
-                user.UserID = UserID;
+                int ContactID = (int)row["ContactID"];
+                int RoleID = (int)row["RoleID"];
+                User user = new User( FirstName, LastName, ContactID, RoleID);
+                user.UserID = (int)row["UserID"];
                 yield return user;
             }
-
-
         }
-
-        public User GetById(int userId)
+        public User GetById(int id)
         {
-            string query = $"SELECT * FROM Users WHERE UserID = {userId}";
+            string query = $"SELECT * FROM [dbo].[User] WHERE UserID = {id}";
+
             DataRow row = GetDataTable(query).Rows[0];
-            int RoleID = int.Parse(row["RoleID"].ToString());
-            int ContactID = int.Parse(row["ContactID"].ToString());
+            int UserID = (int)row["UserID"];
             string FirstName = row["FirstName"].ToString();
             string LastName = row["LastName"].ToString();
-            return new User(FirstName, LastName, ContactID, RoleID);
+            int ContactID = (int) row["ContactID"];
+            int RoleID = (int) row["RoleID"];
+            User user = new User(FirstName, LastName, ContactID, RoleID);
+            user.UserID = (int)row["UserID"];
+            return user;
         }
 
-        public void Update(User user)
+        public void Update(User newEntity)
         {
-            string query = "UPDATE Users SET FirstName = @FirstName, " +
-                           "LastName = @LastName, " +
-                           "ContactID = @ContactID, " +
-                           "RoleID = @RoleID " +
-                           "WHERE UserID = @UserID";
+            string query = @"UPDATE [dbo].[User] SET FirstName = @FirstName, LastName = @LastName,
+                            ContactID = @ContactID, RoleID = @RoleID 
+                            WHERE UserID = @UserID";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@FirstName", user.FirstName);
-                command.Parameters.AddWithValue("@LastName", user.LastName);
-                command.Parameters.AddWithValue("@ContactID", user.ContactID);
-                command.Parameters.AddWithValue("@RoleID", user.RoleID);
-                command.Parameters.AddWithValue("@UserID", user.UserID);
+            SqlCommand command = new SqlCommand(query, connection);
 
-                command.ExecuteNonQuery();
-            }
+            
+            command.Parameters.AddWithValue("@FirstName", newEntity.FirstName);
+            command.Parameters.AddWithValue("@LastName", newEntity.LastName);
+            command.Parameters.AddWithValue("@ContactID", newEntity.ContactID);
+            command.Parameters.AddWithValue("@RoleID", newEntity.RoleID);
+            command.Parameters.AddWithValue("@UserID", newEntity.UserID);
+
+            command.ExecuteNonQuery();
         }
 
         public DataTable GetDataTable(string query)
@@ -89,3 +94,5 @@ namespace API.Repository
         }
     }
 }
+
+

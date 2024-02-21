@@ -1,15 +1,16 @@
 ﻿namespace API.Service.DTOs
 {
-    public class ApplicationDTO
+    public class ApplicationApprovalDTO
     {
         public int ApplicationID { get; set; }
         public int StatusID { get; set; }
        
     }
 
-    public class UniversityFundApplicationDTO {
+    public class UniversityApplicationDTO {
+        public int UniversityID { get; set; }
+        public int amount { get; set; }
 
-        public int ApplicationID { get; set; }
-        public int StatusID { get; set; }
     }
+
 }
